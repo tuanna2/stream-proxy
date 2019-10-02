@@ -5,17 +5,14 @@ const app = express();
 app.get('/', (req, res, next) => {
     try{
         if(!req.query.link){
-            return next();
+            return res.status(500).send("Invalid");
         }
         const proxy = request(req.query.link);
         proxy.pipe(res);
         req.pipe(proxy);
     } catch(e){
-        next();
+        res.status(500).send(e);
     }
-},(req, res)=> {
-    res.writeHead(404, { 'Content-Type': 'text/html' });
-    return res.end('Not Found');
 });
 
 app.listen(8080);
