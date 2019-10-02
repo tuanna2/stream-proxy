@@ -3,7 +3,6 @@ const request = require('request');
 const app = express();
 
 app.get('/', (req, res, next) => {
-    try{
         if(!req.query.link){
             return res.status(500).send("Invalid");
         }
@@ -11,11 +10,11 @@ app.get('/', (req, res, next) => {
         .on('response',res => {
             res.set(res.headers)
         })
+        .on('error',err => {
+            res.status(500).send(err);
+        })
         proxy.pipe(res);
         req.pipe(proxy);
-    } catch(e){
-        res.status(500).send(e);
-    }
 });
 
 app.listen(8080);
