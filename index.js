@@ -7,7 +7,10 @@ app.get('/', (req, res, next) => {
         if(!req.query.link){
             return res.status(500).send("Invalid");
         }
-        const proxy = request(req.query.link);
+        const proxy = request(req.query.link)
+        .on('response',res => {
+            res.set(res.headers)
+        })
         proxy.pipe(res);
         req.pipe(proxy);
     } catch(e){
